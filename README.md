@@ -32,7 +32,7 @@ This portfolio integrates **[Turf.js](https://turfjs.org/)**
 - 📍 **Visualization of coordinates and area calculations**
 - 📏 **Real-time geospatial feature manipulation in-browser**
 
-Turf.js examples are embedded as interactive JS snippets to show your proficiency in:
+Turf.js examples 
 
 ```js
 // Example: Calculating distance between two points
