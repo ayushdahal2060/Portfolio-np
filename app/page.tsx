@@ -18,19 +18,13 @@ import {
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import Image from "next/image"
-import { useState, useEffect } from "react"
+import { Suspense, useState, useEffect } from "react"
 import dynamic from "next/dynamic"
 
-// Completely disable SSR for all complex components
+// Dynamic imports to prevent SSR issues
 const Earth3D = dynamic(() => import("@/components/earth-3d"), {
   ssr: false,
-  loading: () => (
-    <div className="absolute inset-0 bg-gradient-to-br from-black via-blue-900/20 to-black">
-      <div className="absolute inset-0 flex items-center justify-center">
-        <div className="w-16 h-16 border-4 border-cyan-500/30 border-t-cyan-500 rounded-full animate-spin"></div>
-      </div>
-    </div>
-  ),
+  loading: () => <div className="absolute inset-0 bg-gradient-to-br from-black via-blue-900/20 to-black" />,
 })
 
 const AdvancedTurfDemo = dynamic(() => import("@/components/advanced-turf-demo"), {
@@ -39,10 +33,9 @@ const AdvancedTurfDemo = dynamic(() => import("@/components/advanced-turf-demo")
     <div className="space-y-8">
       <Card className="bg-white/5 backdrop-blur-sm border-cyan-500/20">
         <CardContent className="p-6">
-          <div className="animate-pulse space-y-4">
-            <div className="h-6 bg-white/10 rounded w-3/4"></div>
+          <div className="animate-pulse">
+            <div className="h-4 bg-white/10 rounded w-3/4 mb-4"></div>
             <div className="h-4 bg-white/10 rounded w-1/2"></div>
-            <div className="h-4 bg-white/10 rounded w-2/3"></div>
           </div>
         </CardContent>
       </Card>
@@ -140,7 +133,7 @@ export default function Portfolio() {
   ]
 
   const scrollToSection = (sectionId: string) => {
-    if (typeof window !== "undefined") {
+    if (mounted) {
       const element = document.getElementById(sectionId)
       if (element) {
         element.scrollIntoView({ behavior: "smooth" })
@@ -149,7 +142,7 @@ export default function Portfolio() {
   }
 
   const downloadCV = () => {
-    if (typeof window !== "undefined") {
+    if (mounted) {
       const link = document.createElement("a")
       link.href = "/Ayush_Dahal_CV.txt"
       link.download = "Ayush_Dahal_CV.txt"
@@ -157,29 +150,13 @@ export default function Portfolio() {
     }
   }
 
-  const openLink = (url: string) => {
-    if (typeof window !== "undefined") {
-      window.open(url, "_blank")
-    }
-  }
-
-  // Don't render anything until mounted to prevent hydration issues
-  if (!mounted) {
-    return (
-      <div className="min-h-screen bg-black text-white flex items-center justify-center">
-        <div className="text-center">
-          <div className="w-16 h-16 border-4 border-cyan-500/30 border-t-cyan-500 rounded-full animate-spin mx-auto mb-4"></div>
-          <p className="text-cyan-400">Loading Portfolio...</p>
-        </div>
-      </div>
-    )
-  }
-
   return (
     <div className="min-h-screen bg-black text-white overflow-hidden relative">
       {/* 3D Earth Background */}
       <div className="fixed inset-0 z-0">
-        <Earth3D />
+        <Suspense fallback={<div className="absolute inset-0 bg-gradient-to-br from-black via-blue-900/20 to-black" />}>
+          <Earth3D />
+        </Suspense>
       </div>
 
       {/* Animated Grid Overlay */}
@@ -264,6 +241,7 @@ export default function Portfolio() {
                   width={160}
                   height={160}
                   className="w-full h-full object-cover"
+                  crossOrigin="anonymous"
                 />
               </div>
             </motion.div>
@@ -399,6 +377,7 @@ export default function Portfolio() {
                     width={320}
                     height={320}
                     className="w-full h-full object-cover"
+                    crossOrigin="anonymous"
                   />
                 </div>
               </motion.div>
@@ -678,7 +657,7 @@ export default function Portfolio() {
             >
               <Button
                 size="lg"
-                onClick={() => openLink("mailto:ayushdahal2060@gmail.com")}
+                onClick={() => mounted && window.open("mailto:ayushdahal2060@gmail.com", "_blank")}
                 className="bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-700 hover:to-blue-700 text-white border-0"
               >
                 <Mail className="w-5 h-5 mr-2" />
@@ -687,7 +666,7 @@ export default function Portfolio() {
               <Button
                 size="lg"
                 variant="outline"
-                onClick={() => openLink("https://github.com/ayushdahal2060")}
+                onClick={() => mounted && window.open("https://github.com/ayushdahal2060", "_blank")}
                 className="border-cyan-400/30 text-cyan-400 hover:bg-cyan-400/10 bg-transparent"
               >
                 <Github className="w-5 h-5 mr-2" />
@@ -696,7 +675,7 @@ export default function Portfolio() {
               <Button
                 size="lg"
                 variant="outline"
-                onClick={() => openLink("https://www.linkedin.com/in/ayush-dahal-630225315")}
+                onClick={() => mounted && window.open("https://www.linkedin.com/in/ayush-dahal-630225315", "_blank")}
                 className="border-cyan-400/30 text-cyan-400 hover:bg-cyan-400/10 bg-transparent"
               >
                 <Linkedin className="w-5 h-5 mr-2" />
