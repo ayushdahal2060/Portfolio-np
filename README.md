@@ -2,7 +2,7 @@
 
 > A personal portfolio website designed using **HTML, CSS, JavaScript, and Turf.js**, fully deployed using  **Vercel**  for seamless design iteration and hosting.
 
-[![Deployed on Vercel](https://img.shields.io/badge/Deployed%20on-Vercel-black?style=for-the-badge&logo=vercel)](https://vercel.com/ayushdahal2060-1793s-projects/v0-ayush-dahal-portfolio)
+
 
 ---
 
