@@ -10,6 +10,8 @@
   },
   "dependencies": {
     "@emotion/is-prop-valid": "latest",
+    "@radix-ui/react-label": "latest",
+    "@radix-ui/react-select": "latest",
     "@radix-ui/react-slot": "^1.0.2",
     "@react-three/drei": "latest",
     "@react-three/fiber": "latest",
