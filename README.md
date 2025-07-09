@@ -1,30 +1,42 @@
-# Ayush Dahal Portfolio
+# 🌐 Ayush Dahal Portfolio
 
-*Automatically synced with your [v0.dev](https://v0.dev) deployments*
+> A personal portfolio website designed using **HTML, CSS, JavaScript, and Turf.js**, fully deployed using  **Vercel**  for seamless design iteration and hosting.
 
 [![Deployed on Vercel](https://img.shields.io/badge/Deployed%20on-Vercel-black?style=for-the-badge&logo=vercel)](https://vercel.com/ayushdahal2060-1793s-projects/v0-ayush-dahal-portfolio)
-[![Built with v0](https://img.shields.io/badge/Built%20with-v0.dev-black?style=for-the-badge)](https://v0.dev/chat/projects/AnvrANY50VO)
 
-## Overview
+---
 
-This repository will stay in sync with your deployed chats on [v0.dev](https://v0.dev).
-Any changes you make to your deployed app will be automatically pushed to this repository from [v0.dev](https://v0.dev).
+## 🔗 Live Deployment
 
-## Deployment
+👉 Visit: **[ayush-dahal-portfolio.vercel.app](https://vercel.com/ayushdahal2060-1793s-projects/v0-ayush-dahal-portfolio)**  
 
-Your project is live at:
 
-**[https://vercel.com/ayushdahal2060-1793s-projects/v0-ayush-dahal-portfolio](https://vercel.com/ayushdahal2060-1793s-projects/v0-ayush-dahal-portfolio)**
+---
 
-## Build your app
+## 📦 Features
 
-Continue building your app on:
+### ✅ General Portfolio Features
 
-**[https://v0.dev/chat/projects/AnvrANY50VO](https://v0.dev/chat/projects/AnvrANY50VO)**
+- **Home Page**: Personal intro, professional tagline, and photo.
+- **About Me**: Brief biography, academic and career journey.
+- **Projects**: Showcasing geospatial apps and coding work.
+- **Contact**: Social media links and direct email section.
+- **Responsive Design**: Works across desktop, tablet, and mobile.
 
-## How It Works
+### 🧭 Geospatial Intelligence with Turf.js
 
-1. Create and modify your project using [v0.dev](https://v0.dev)
-2. Deploy your chats from the v0 interface
-3. Changes are automatically pushed to this repository
-4. Vercel deploys the latest version from this repository
+This portfolio integrates **[Turf.js](https://turfjs.org/)**
+
+- ➕ **Point creation and distance computation**
+- 🗺️ **Interactive spatial operations like buffering and centroiding**
+- 📍 **Visualization of coordinates and area calculations**
+- 📏 **Real-time geospatial feature manipulation in-browser**
+
+Turf.js examples are embedded as interactive JS snippets to show your proficiency in:
+
+```js
+// Example: Calculating distance between two points
+const from = turf.point([85.324, 27.7172]); // Kathmandu
+const to = turf.point([85.4288, 27.6710]); // Dhulikhel
+const options = { units: 'kilometers' };
+const distance = turf.distance(from, to, options);
