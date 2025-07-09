@@ -8,7 +8,7 @@
 
 ## 🔗 Live Deployment
 
-👉 Visit: **[ayush-dahal-portfolio.vercel.app](https://vercel.com/ayushdahal2060-1793s-projects/v0-ayush-dahal-portfolio)**  
+👉 Visit: **https://v0-ayush-dahal-portfolio.vercel.app/**  
 
 
 ---
