@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
@@ -8,7 +8,6 @@ import { Label } from "@/components/ui/label"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Textarea } from "@/components/ui/textarea"
 import { MapPin, Calculator, Zap, Target, Search, Download, Upload } from "lucide-react"
-import * as turf from "@turf/turf"
 
 interface Place {
   name: string
@@ -17,6 +16,8 @@ interface Place {
 }
 
 export default function AdvancedTurfDemo() {
+  const [mounted, setMounted] = useState(false)
+  const [turf, setTurf] = useState<any>(null)
   const [selectedOperation, setSelectedOperation] = useState("buffer")
   const [searchQuery, setSearchQuery] = useState("")
   const [selectedPlace, setSelectedPlace] = useState<Place | null>(null)
@@ -24,6 +25,31 @@ export default function AdvancedTurfDemo() {
   const [results, setResults] = useState<any>(null)
   const [geoJsonInput, setGeoJsonInput] = useState("")
   const [analysisPoints, setAnalysisPoints] = useState<Place[]>([])
+
+  useEffect(() => {
+    let mounted = true
+
+    const loadTurf = async () => {
+      try {
+        const turfModule = await import("@turf/turf")
+        if (mounted) {
+          setTurf(turfModule)
+          setMounted(true)
+        }
+      } catch (error) {
+        console.error("Failed to load Turf.js:", error)
+        if (mounted) {
+          setMounted(true) // Still set mounted to show the UI
+        }
+      }
+    }
+
+    loadTurf()
+
+    return () => {
+      mounted = false
+    }
+  }, [])
 
   // Predefined places in Nepal and surrounding areas
   const places: Place[] = [
@@ -57,7 +83,7 @@ export default function AdvancedTurfDemo() {
   ]
 
   const performSpatialAnalysis = () => {
-    if (!selectedPlace && analysisPoints.length === 0) return
+    if (!turf || (!selectedPlace && analysisPoints.length === 0)) return
 
     let result: any = null
 
@@ -168,7 +194,7 @@ export default function AdvancedTurfDemo() {
   }
 
   const exportResults = () => {
-    if (results) {
+    if (results && typeof window !== "undefined") {
       const dataStr = JSON.stringify(results, null, 2)
       const dataBlob = new Blob([dataStr], { type: "application/json" })
       const url = URL.createObjectURL(dataBlob)
@@ -180,6 +206,8 @@ export default function AdvancedTurfDemo() {
   }
 
   const processGeoJSON = () => {
+    if (!turf) return
+
     try {
       const geoJson = JSON.parse(geoJsonInput)
       if (geoJson.type === "FeatureCollection") {
@@ -195,6 +223,22 @@ export default function AdvancedTurfDemo() {
     } catch (error) {
       setResults({ error: "Invalid GeoJSON format" })
     }
+  }
+
+  if (!mounted) {
+    return (
+      <div className="space-y-8">
+        <Card className="bg-white/5 backdrop-blur-sm border-cyan-500/20">
+          <CardContent className="p-6">
+            <div className="animate-pulse space-y-4">
+              <div className="h-6 bg-white/10 rounded w-3/4"></div>
+              <div className="h-4 bg-white/10 rounded w-1/2"></div>
+              <div className="h-4 bg-white/10 rounded w-2/3"></div>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+    )
   }
 
   return (
@@ -346,10 +390,11 @@ export default function AdvancedTurfDemo() {
 
               <Button
                 onClick={performSpatialAnalysis}
-                className="bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-700 hover:to-blue-700 text-white border-0 mt-4 w-full"
+                disabled={!turf}
+                className="bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-700 hover:to-blue-700 text-white border-0 mt-4 w-full disabled:opacity-50"
               >
                 <Calculator className="w-4 h-4 mr-2" />
-                Perform Analysis
+                {turf ? "Perform Analysis" : "Loading Turf.js..."}
               </Button>
             </div>
 
@@ -456,10 +501,11 @@ export default function AdvancedTurfDemo() {
             </div>
             <Button
               onClick={processGeoJSON}
+              disabled={!turf}
               variant="outline"
-              className="border-cyan-400/30 text-cyan-400 hover:bg-cyan-400/10 bg-transparent"
+              className="border-cyan-400/30 text-cyan-400 hover:bg-cyan-400/10 bg-transparent disabled:opacity-50"
             >
-              Analyze GeoJSON
+              {turf ? "Analyze GeoJSON" : "Loading Turf.js..."}
             </Button>
           </div>
         </CardContent>
