@@ -1,6 +1,6 @@
 "use client"
 
-import { useRef, useEffect, useState } from "react"
+import { useRef } from "react"
 import { Canvas, useFrame } from "@react-three/fiber"
 import { Sphere, Stars } from "@react-three/drei"
 import * as THREE from "three"
@@ -72,16 +72,6 @@ function OrbitingCamera() {
 }
 
 export default function Earth3D() {
-  const [mounted, setMounted] = useState(false)
-
-  useEffect(() => {
-    setMounted(true)
-  }, [])
-
-  if (!mounted) {
-    return <div className="absolute inset-0 bg-gradient-to-br from-black via-blue-900/20 to-black" />
-  }
-
   return (
     <div className="absolute inset-0 z-0">
       <Canvas camera={{ position: [0, 0, 8], fov: 60 }}>

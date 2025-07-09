@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
@@ -8,6 +8,7 @@ import { Label } from "@/components/ui/label"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Textarea } from "@/components/ui/textarea"
 import { MapPin, Calculator, Zap, Target, Search, Download, Upload } from "lucide-react"
+import * as turf from "@turf/turf"
 
 interface Place {
   name: string
@@ -16,7 +17,6 @@ interface Place {
 }
 
 export default function AdvancedTurfDemo() {
-  const [mounted, setMounted] = useState(false)
   const [selectedOperation, setSelectedOperation] = useState("buffer")
   const [searchQuery, setSearchQuery] = useState("")
   const [selectedPlace, setSelectedPlace] = useState<Place | null>(null)
@@ -24,10 +24,6 @@ export default function AdvancedTurfDemo() {
   const [results, setResults] = useState<any>(null)
   const [geoJsonInput, setGeoJsonInput] = useState("")
   const [analysisPoints, setAnalysisPoints] = useState<Place[]>([])
-
-  useEffect(() => {
-    setMounted(true)
-  }, [])
 
   // Predefined places in Nepal and surrounding areas
   const places: Place[] = [
@@ -60,12 +56,9 @@ export default function AdvancedTurfDemo() {
     { id: "nearestPoint", name: "Nearest Point", icon: Calculator },
   ]
 
-  const performSpatialAnalysis = async () => {
-    if (!mounted) return
+  const performSpatialAnalysis = () => {
     if (!selectedPlace && analysisPoints.length === 0) return
 
-    // Dynamic import to avoid SSR issues
-    const turf = await import("@turf/turf")
     let result: any = null
 
     try {
@@ -175,7 +168,7 @@ export default function AdvancedTurfDemo() {
   }
 
   const exportResults = () => {
-    if (results && mounted) {
+    if (results) {
       const dataStr = JSON.stringify(results, null, 2)
       const dataBlob = new Blob([dataStr], { type: "application/json" })
       const url = URL.createObjectURL(dataBlob)
@@ -186,13 +179,10 @@ export default function AdvancedTurfDemo() {
     }
   }
 
-  const processGeoJSON = async () => {
-    if (!mounted) return
-
+  const processGeoJSON = () => {
     try {
       const geoJson = JSON.parse(geoJsonInput)
       if (geoJson.type === "FeatureCollection") {
-        const turf = await import("@turf/turf")
         const area = turf.area(geoJson)
         const bbox = turf.bbox(geoJson)
         setResults({
@@ -205,21 +195,6 @@ export default function AdvancedTurfDemo() {
     } catch (error) {
       setResults({ error: "Invalid GeoJSON format" })
     }
-  }
-
-  if (!mounted) {
-    return (
-      <div className="space-y-8">
-        <Card className="bg-white/5 backdrop-blur-sm border-cyan-500/20">
-          <CardContent className="p-6">
-            <div className="animate-pulse">
-              <div className="h-4 bg-white/10 rounded w-3/4 mb-4"></div>
-              <div className="h-4 bg-white/10 rounded w-1/2"></div>
-            </div>
-          </CardContent>
-        </Card>
-      </div>
-    )
   }
 
   return (
